@@ -5,7 +5,7 @@ import ChatBox from "./ChatBox";
 import Prompt from "../model/Prompt";
 import UserResponse from "../model/UserResponse";
 import Colors from "../styles/colors";
-
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 class Messages extends Component {
     state = {
         current: websiteModel.startPrompt,
@@ -34,14 +34,15 @@ class Messages extends Component {
                     <style jsx>{`
                         .button-container {
                             display: flex;
-                            flex-direction: column;
+                            flex-direction: row;
+                            flex-wrap: wrap;
+                            justify-content: flex-end;
                         }
                         button {
-                            padding: 1em;
-                            border: solid 1px ${Colors.white};
-                            background: none;
-                            border-radius: 1rem;
-                            font-size: 14px;
+                            max-width: 10rem;
+                            min-width: 8rem;
+                            margin: 0.2rem;
+                            flex-basis: 40%;
                         }
                         `}
                     </style>
@@ -59,11 +60,27 @@ class Messages extends Component {
                         {(DialogHelper.isPrompt(converationItem) && converationItem.content)}
                     </ChatBox>
                 })}
-                <ChatBox text={this.state.current.text} isPrompt={DialogHelper.isPrompt(this.state.current)} >
+                <CSSTransition
+                in={true}
+                timeout={200}
+                classNames="fadeNewChats">
+                    <ChatBox text={this.state.current.text} isPrompt={DialogHelper.isPrompt(this.state.current)} >
 
-                    {(DialogHelper.isPrompt(this.state.current) && this.state.current.content)}
-                </ChatBox>
+                        {(DialogHelper.isPrompt(this.state.current) && this.state.current.content)}
+                    </ChatBox>
+                </CSSTransition>
                 {this.renderResponses()}
+                <style jsx>{`
+                    .fadeNewChats-enter {
+                        opacity: 0.01;
+                    }
+                    .fadeNewChats-enter-active {
+                        opacity: 1;
+                        transition: opacity 200ms;
+                    }
+                    
+
+                    `}</style>
             </div>
         )
     }
