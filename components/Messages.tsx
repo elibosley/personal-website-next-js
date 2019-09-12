@@ -22,12 +22,20 @@ class Messages extends Component {
 
     }
 
-    renderResponses(): JSX.Element[] | null {
+    renderResponses(): JSX.Element {
         if (DialogHelper.isPrompt(this.state.current)) {
-            return this.state.current.responses.map((response, index) => {
-                return (<button key={index}
-                    onClick={() => this.choose(response)}>{response.text.toString()}
+            return (
+                <div className="button-container">
+                    {this.state.current.responses.map((response, index) => {
+                        return (<button key={index}
+                            onClick={() => this.choose(response)}>{response.text.toString()}
+                        </button>)
+                    })}
                     <style jsx>{`
+                        .button-container {
+                            display: flex;
+                            flex-direction: column;
+                        }
                         button {
                             padding: 1em;
                             border: solid 1px ${Colors.white};
@@ -35,31 +43,31 @@ class Messages extends Component {
                             border-radius: 1rem;
                             font-size: 14px;
                         }
-                    `}</style>
-                </button>)
-            })
-        } else return null;
+                        `}
+                    </style>
+                </div>)
+        } else return (<div></div>)
     }
 
     render() {
         return (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="message-list">
                 {this.state.pastConversation.map((converationItem, index) => {
                     return <ChatBox key={`${index + converationItem.text}`}
                         text={converationItem.text}
-                        isPrompt={DialogHelper.isPrompt(converationItem)} > 
+                        isPrompt={DialogHelper.isPrompt(converationItem)} >
                         {(DialogHelper.isPrompt(converationItem) && converationItem.content)}
-                        </ChatBox>
+                    </ChatBox>
                 })}
                 <ChatBox text={this.state.current.text} isPrompt={DialogHelper.isPrompt(this.state.current)} >
 
-                {(DialogHelper.isPrompt(this.state.current) && this.state.current.content)}
+                    {(DialogHelper.isPrompt(this.state.current) && this.state.current.content)}
                 </ChatBox>
                 {this.renderResponses()}
-
             </div>
         )
     }
 }
+
 
 export default Messages

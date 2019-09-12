@@ -5,32 +5,31 @@ interface ChatBoxProps {
     key?: string;
     text: string;
     isPrompt: boolean;
-    
+
 }
 
 const ChatBox: React.FC<PropsWithChildren<ChatBoxProps>> = (props) =>
-    (<div className={props.isPrompt ? "chat-box prompt" : "chat-box user-response"}>
-        <p>{props.text.toString()}</p>
-        {props.children}
-        <style jsx>{`
-        .chat-box {
-            display: flex;
-            padding: 0.5rem 1rem;
-            border-radius: 1em;
-        }
-        p {
-        }
-        .prompt {
-            background: ${Colors.promptBackground}            
-        }
-        .user-response {
-            justify-content: flex-end;
-            background: ${Colors.responseBackground}
-        }
-        .user-response p {
-            
-        }
-    `}</style>
-    </div>)
+    (
+        <div className="chat-box">
+
+            <div className="chat-box__content">
+                <p>{props.text.toString()}</p>
+                {props.children}
+
+            </div>
+            <style jsx>{`
+                .chat-box {
+                    display: flex;
+                    justify-content: ${props.isPrompt? 'flex-start': 'flex-end'};
+                }
+
+                .chat-box__content {
+                    display: inline-block;
+                    padding: 0.5rem 1rem;
+                    border-radius: 1em;
+                    background: ${props.isPrompt? Colors.promptBackground: Colors.responseBackground} 
+                }
+               `}</style>
+        </div>)
 
 export default ChatBox
