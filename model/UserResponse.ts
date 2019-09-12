@@ -4,8 +4,8 @@ import Prompt from "./Prompt";
 
 class UserResponse {
     text: string;
-    nextPrompt: Prompt | undefined;
-    constructor(text, nextPrompt = undefined) {
+    nextPrompt?: Prompt;
+    constructor(text: string, nextPrompt?: Prompt) {
         this.text = text;
         this.nextPrompt = nextPrompt;
     }

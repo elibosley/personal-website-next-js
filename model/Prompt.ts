@@ -12,7 +12,7 @@ class Prompt {
     content?: any;
     responses: UserResponse[];
 
-    constructor(text, responses, content = undefined) {
+    constructor(text: string, responses: UserResponse[], content: any = undefined) {
         this.text = text;
         this.responses = responses;
         this.content = content;

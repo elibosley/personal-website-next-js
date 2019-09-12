@@ -1,61 +1,51 @@
 import React from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
-import Nav from '../components/nav'
 import Messages from '../components/Messages';
-
+import Colors from '../styles/colors';
 const Home = () => (
   <div>
     <Head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.css" />
       <title>Elijah Bosley</title>
     </Head>
 
-    <Nav />
-    <Messages />
+    <div className='row'>
+
+      <Messages />
+    </div>
     <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
+      @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+      
+      :global(button) {
+        color: ${Colors.white};
       }
-      .title {
+      :global(p) {
+        line-height: 1.5em;
+      }
+      :global(body) {
+        background: ${Colors.background};
+        color: ${Colors.white};
         margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
+        font-family: 'Lato', sans-serif;
         font-size: 18px;
       }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
+      .row {
+        margin: auto;
+        max-width: 880px;
+        padding: 0 1rem;
+      }
+      /* apply a natural box layout model to all elements, but allowing components to change */
+      html {
+        box-sizing: border-box;
+      }
+      :global(*), :global(*:before), :global(*:after) {
+        box-sizing: inherit;
+      }
+      @media screen and (min-width: 600px) {
+        .row {
+          padding: 0 2rem;
+        }
       }
     `}</style>
   </div>
