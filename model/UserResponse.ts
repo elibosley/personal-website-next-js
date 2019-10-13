@@ -5,7 +5,9 @@ import Prompt from "./Prompt";
 class UserResponse {
     text: string;
     nextPrompt?: Prompt;
+    key: number;
     constructor(text: string, nextPrompt?: Prompt) {
+        this.key = 0;
         this.text = text;
         this.nextPrompt = nextPrompt;
     }

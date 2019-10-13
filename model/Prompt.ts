@@ -12,10 +12,12 @@ class Prompt {
     content?: any;
     responses: UserResponse[];
 
+    key: number;
     constructor(text: string, responses: UserResponse[], content: any = undefined) {
         this.text = text;
         this.responses = responses;
         this.content = content;
+        this.key = 0;
     }
 
     public toString = (): string => {

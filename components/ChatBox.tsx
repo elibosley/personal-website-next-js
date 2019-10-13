@@ -5,7 +5,6 @@ interface ChatBoxProps {
     key?: string;
     text: string;
     isPrompt: boolean;
-
 }
 
 const ChatBox: React.FC<PropsWithChildren<ChatBoxProps>> = (props) =>

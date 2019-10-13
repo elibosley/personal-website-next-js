@@ -1,89 +1,67 @@
-import { Component } from "react";
+import { Component, useState } from "react";
 import websiteModel from '../model/WebsiteModel'
 import DialogHelper from "../model/DialogHelper";
 import ChatBox from "./ChatBox";
 import Prompt from "../model/Prompt";
 import UserResponse from "../model/UserResponse";
+import { useTransition, animated } from 'react-spring'
 import Colors from "../styles/colors";
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
-class Messages extends Component {
-    state = {
-        current: websiteModel.startPrompt,
-        pastConversation: [] as Array<Prompt | UserResponse>
+import { Responses } from "./Responses";
+const Messages: React.FC = () => {
+    const [current, setCurrent] = useState(websiteModel.startPrompt)
+    const [index, setIndex] = useState(0);
+    const [pastConversation, setPastConversation] = useState([] as Array<Prompt | UserResponse>)
+
+    const duration = 300;
+
+    const defaultStyle = {
+        transition: `opacity ${duration}ms ease-in-out`,
+        opacity: 0,
     }
 
-    choose(next: UserResponse): void {
+    const transitionStyles = {
+        entering: { opacity: 1 },
+        entered: { opacity: 1 },
+        exiting: { opacity: 0 },
+        exited: { opacity: 0 },
+    };
+    const choose = (next: UserResponse): void => {
         console.log(`Choosing ${next.text.toString()}`)
         let nextPrompt = next.nextPrompt ? next.nextPrompt : websiteModel.notImplementedResponse;
-        this.setState({
-            pastConversation: [...this.state.pastConversation, this.state.current, next],
-            current: nextPrompt
-        });
-
+        setCurrent(nextPrompt);
+        current.key = index;
+        next.key = index + 1;
+        setIndex(index + 2);
+        setPastConversation([...pastConversation, current, next])
     }
 
-    renderResponses(): JSX.Element {
-        if (DialogHelper.isPrompt(this.state.current)) {
-            return (
-                <div className="button-container">
-                    {this.state.current.responses.map((response, index) => {
-                        return (<button key={index}
-                            onClick={() => this.choose(response)}>{response.text.toString()}
-                        </button>)
-                    })}
-                    <style jsx>{`
-                        .button-container {
-                            display: flex;
-                            flex-direction: row;
-                            flex-wrap: wrap;
-                            justify-content: flex-end;
-                        }
-                        button {
-                            max-width: 10rem;
-                            min-width: 8rem;
-                            margin: 0.2rem;
-                            flex-basis: 40%;
-                        }
-                        `}
-                    </style>
-                </div>)
-        } else return (<div></div>)
-    }
+    const transitions = useTransition(pastConversation, conversationItem => conversationItem.text, {
+        initial: { transform: 'translate3d(0%, 0%,0)' },
+        from: { transform: 'translate3d(0,-40px,0)' },
+        enter: { transform: 'translate3d(0,0px,0)' },
+        leave: { transform: 'translate3d(0,-40px,0)' },
+    });
 
-    render() {
-        return (
-            <div className="message-list">
-                {this.state.pastConversation.map((converationItem, index) => {
-                    return <ChatBox key={`${index + converationItem.text}`}
-                        text={converationItem.text}
-                        isPrompt={DialogHelper.isPrompt(converationItem)} >
-                        {(DialogHelper.isPrompt(converationItem) && converationItem.content)}
+    return (
+        <div className="message-list">
+            {transitions.map(({ item, props, key }, index) => {
+                <animated.div key={key} style={props}>
+                    <ChatBox
+                        text={item.text}
+                        isPrompt={DialogHelper.isPrompt(item)} >
+                        {(DialogHelper.isPrompt(item) && item.content)}
                     </ChatBox>
-                })}
-                <CSSTransition
-                in={true}
-                timeout={200}
-                classNames="fadeNewChats">
-                    <ChatBox text={this.state.current.text} isPrompt={DialogHelper.isPrompt(this.state.current)} >
+                </animated.div>
+            })}
+            <ChatBox text={current.text} isPrompt={DialogHelper.isPrompt(current)} >
+                {(DialogHelper.isPrompt(current) && current.content)}
+            </ChatBox>
 
-                        {(DialogHelper.isPrompt(this.state.current) && this.state.current.content)}
-                    </ChatBox>
-                </CSSTransition>
-                {this.renderResponses()}
-                <style jsx>{`
-                    .fadeNewChats-enter {
-                        opacity: 0.01;
-                    }
-                    .fadeNewChats-enter-active {
-                        opacity: 1;
-                        transition: opacity 200ms;
-                    }
-                    
-
-                    `}</style>
-            </div>
-        )
-    }
+            {DialogHelper.isPrompt(current) && (
+                <Responses responses={current.responses} chooseHandler={choose} />
+            )}
+        </div>
+    )
 }
 
 
