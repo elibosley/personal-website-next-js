@@ -5,26 +5,11 @@ import ChatBox from "./ChatBox";
 import Prompt from "../model/Prompt";
 import UserResponse from "../model/UserResponse";
 import { useTransition, animated } from 'react-spring'
-import Colors from "../styles/colors";
 import { Responses } from "./Responses";
 const Messages: React.FC = () => {
     const [current, setCurrent] = useState(websiteModel.startPrompt)
     const [index, setIndex] = useState(0);
     const [pastConversation, setPastConversation] = useState([] as Array<Prompt | UserResponse>)
-
-    const duration = 300;
-
-    const defaultStyle = {
-        transition: `opacity ${duration}ms ease-in-out`,
-        opacity: 0,
-    }
-
-    const transitionStyles = {
-        entering: { opacity: 1 },
-        entered: { opacity: 1 },
-        exiting: { opacity: 0 },
-        exited: { opacity: 0 },
-    };
     const choose = (next: UserResponse): void => {
         console.log(`Choosing ${next.text.toString()}`)
         let nextPrompt = next.nextPrompt ? next.nextPrompt : websiteModel.notImplementedResponse;
