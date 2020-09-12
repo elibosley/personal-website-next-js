@@ -1,5 +1,6 @@
 import Colors from "../styles/colors";
 import { PropsWithChildren } from "react";
+import { useSpring, animated } from 'react-spring';
 
 interface ChatBoxProps {
     key?: string;
@@ -7,19 +8,25 @@ interface ChatBoxProps {
     isPrompt: boolean;
 }
 
-const ChatBox: React.FC<PropsWithChildren<ChatBoxProps>> = (props) =>
-    (
-        <div className="chat-box">
+const ChatBox: React.FC<PropsWithChildren<ChatBoxProps>> = (props) => {
+    const springProps = useSpring({
+        opacity: 1,
+        from: { opacity: 0 },
+    })
+    return (
+        <animated.div style={springProps}>
 
-            <div className="chat-box__content">
-                <p>{props.text.toString()}</p>
-                {props.children &&
-                    <div className="chat-box__children">
-                        {props.children}
-                    </div>
-                }
-            </div>
-            <style jsx>{`
+            <div className="chat-box">
+
+                <div className="chat-box__content">
+                    <p>{props.text.toString()}</p>
+                    {props.children &&
+                        <div className="chat-box__children">
+                            {props.children}
+                        </div>
+                    }
+                </div>
+                <style jsx>{`
                 .chat-box {
                     display: flex;
                     justify-content: ${props.isPrompt ? 'flex-start' : 'flex-end'};
@@ -40,6 +47,8 @@ const ChatBox: React.FC<PropsWithChildren<ChatBoxProps>> = (props) =>
                     margin: 1rem 0.5rem;
                 }
                `}</style>
-        </div>)
+            </div>
+        </animated.div>)
+}
 
 export default ChatBox
